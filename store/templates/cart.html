@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+<div class="container">
+    <div class="border rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Your Cart</p>
+        <hr>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Sno.</th>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for product in products %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td><img style="height: 90px;" class="rounded.circle" src="{{product.Image.url}}" alt=""></td>
+                <td>{{product.Name}}</td>
+                <td>{{product.Price|currency}}</td>
+                <td>{{ product|cart_quantity:request.session.cart}}</td>
+                <td>{{product|price_total:request.session.cart|currency}}</td>
+                <td>
+                    <div class="row no-gutters">
+                        <form action="/#{{product.id}}" class="col-2" method="POST">
+                            {% csrf_token %}
+                            <input hidden type="text" name='product' value='{{product.id}}'>
+                            <input hidden type="text" name='remove' value='True'>
+                            <input type="submit" value=" - " class="btn btn-danger">
+
+                        </form>
+
+                        <div class="text-center col">{{product|cart_quantity:request.session.cart}}Item</div>
+
+                        <form action="/#{{product.id}}" class="col-2" method="POST">
+                            {% csrf_token %}
+
+                            <input hidden type="text" name='product' value='{{product.id}}'>
+                            <input type="submit" value=" + " class="btn btn-success">
+
+                        </form>
+
+                    </div>
+
+                </td>
+
+                {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="3"></th>
+                <th colspan="">Total</th>
+                <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+            </tr>
+            </tfoot>
+        </table>
+        <hr>
+        <div class="m-3 p-3">
+            <a href="#" data-toggle="modal" data-target="#exampleModal"
+               class="btn btn-outline-success border rounded col-lg-3 float-right">Check out</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- model -->
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Check Out Form</h5>
+                <hr>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="m-2 p-3">
+                    <form action="/check-out" method="POST">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="">First Name:</label>
+                            <input type="text" name="firstname" id="1" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Last Name:</label>
+                            <input type="text" name="lastname" id="2" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Mobile_Number:</label>
+                            <input type="text" name="mobile_number" id="" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Email_Address:</label>
+                            <input type="text" name="email_address" id="" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Address:</label>
+                            <input type="text" name="address" id="3" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Pincode:</label>
+                            <input type="text" name="pincode" id="4" class="form-control" placeholder=""
+                                   aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">City:</label></br>
+                            <select name="city" id="city" class="form-group">
+                                <option value="">Select City</option>
+                                <option value="AHMEDABAD">AHMEDABAD</option>
+                                <option value="Surat">Surat</option>
+                                <option value="Vadodara(Baroda)">Vadodara (Baroda)</option>
+                                <option value="Rajkot">Rajkot</option>
+                                <option value="Anand">Anand</option>
+                                <option value="Bhavnagar(Bhaunagar)">Bhavnagar(Bhaunagar)</option>
+                                <option value="Jamnagar">Jamnagar</option>
+                                <option value="Nadiad">Nadiad</option>
+                                <option value="Junagadh">Junagadh</option>
+                                <option value="Navsari">Navsari</option>
+                                <option value="Morvi">Morvi</option>
+                                <option value="Gandhidham">Gandhidham</option>
+                                <option value="Bharuch (Broach)">Bharuch (Broach)</option>
+                                <option value="Porbandar">Porbandar</option>
+                                <option value="Mahesana">Mahesana</option>
+                                <option value="Bhuj">Bhuj</option>
+                                <option value="Veraval">Veraval</option>
+                                <option value="Surendranagar">Surendranagar</option>
+                                <option value="Valsad (Bulsar)">Valsad (Bulsar)</option>
+                                <option value="Vapi (Wapi)">Vapi (Wapi)</option>
+                                <option value="Godhra">Godhra</option>
+                                <option value="Palanpur">Palanpur</option>
+                                <option value="Anklesvar">Anklesvar</option>
+                                <option value="Patan">Patan</option>
+                                <option value="Dahod [Dohad]"> Dahod [Dohad]</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">State:</label></br>
+                            <select name="state" id="state" class="form-group">
+                                <option value="">Gujarat</option>
+                            </select>
+                        </div>
+                        <h4 class="btn btn-danger">NOTE:</h4>
+
+                        <p class="btn btn-danger">*This Website Only Accept Cash On Delivery Payment Not Online
+                            Payment</p>
+                         <p class="btn btn-success ">&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                             *All Order Deliver Within 4 To 5 Days &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</p>
+
+
+                        <input type="submit" class="btn float-right btn-outline-success col-lg-6" value="Place Order">
+
+
+                    </form>
+
+
+
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
